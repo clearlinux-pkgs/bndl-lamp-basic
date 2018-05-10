@@ -4,7 +4,7 @@
 #
 Name     : bndl-lamp-basic
 Version  : 1.4
-Release  : 14
+Release  : 15
 URL      : http://localhost/cgit/projects/bndl-lamp-basic/snapshot/bndl-lamp-basic-1.4.tar.gz
 Source0  : http://localhost/cgit/projects/bndl-lamp-basic/snapshot/bndl-lamp-basic-1.4.tar.gz
 Summary  : No detailed summary available
