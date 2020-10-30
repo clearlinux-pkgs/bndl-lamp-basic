@@ -4,14 +4,15 @@
 #
 Name     : bndl-lamp-basic
 Version  : 1.4
-Release  : 16
+Release  : 17
 URL      : http://localhost/cgit/projects/bndl-lamp-basic/snapshot/bndl-lamp-basic-1.4.tar.gz
 Source0  : http://localhost/cgit/projects/bndl-lamp-basic/snapshot/bndl-lamp-basic-1.4.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : LGPL-2.1
-Requires: bndl-lamp-basic-autostart
-Requires: bndl-lamp-basic-config
+Requires: bndl-lamp-basic-autostart = %{version}-%{release}
+Requires: bndl-lamp-basic-license = %{version}-%{release}
+Requires: bndl-lamp-basic-services = %{version}-%{release}
 
 %description
 No detailed description available
@@ -24,29 +25,51 @@ Group: Default
 autostart components for the bndl-lamp-basic package.
 
 
-%package config
-Summary: config components for the bndl-lamp-basic package.
+%package license
+Summary: license components for the bndl-lamp-basic package.
 Group: Default
 
-%description config
-config components for the bndl-lamp-basic package.
+%description license
+license components for the bndl-lamp-basic package.
+
+
+%package services
+Summary: services components for the bndl-lamp-basic package.
+Group: Systemd services
+
+%description services
+services components for the bndl-lamp-basic package.
 
 
 %prep
 %setup -q -n bndl-lamp-basic-1.4
+cd %{_builddir}/bndl-lamp-basic-1.4
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1524501047
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604083981
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 make  %{?_smp_mflags}
 
+
 %install
-export SOURCE_DATE_EPOCH=1524501047
+export SOURCE_DATE_EPOCH=1604083981
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/bndl-lamp-basic
+cp %{_builddir}/bndl-lamp-basic-1.4/LICENSE %{buildroot}/usr/share/package-licenses/bndl-lamp-basic/01a6b4bf79aca9b556822601186afab86e8c4fbf
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/php-fpm.service
 
 %files
 %defattr(-,root,root,-)
@@ -55,6 +78,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/lib/systemd/system/multi-user.target.wants/httpd.service
 
-%files config
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/bndl-lamp-basic/01a6b4bf79aca9b556822601186afab86e8c4fbf
+
+%files services
 %defattr(-,root,root,-)
 %exclude /usr/lib/systemd/system/multi-user.target.wants/httpd.service
